@@ -1,42 +1,38 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 
-import { signUp } from './redux';
-
-const actions = {
+/*
+const mapDispatchToProps = {
   signUp
 };
+*/
+
 const propTypes = {
   signUp: PropTypes.func.isRequired
 };
 
-export class SignUp extends React.Component {
+export default class SignUp extends React.Component {
   render() {
-    const { signUp } = this.props;
     return (
       <div className='auth-signup'>
-        <form
-          name='signup'
-          onSubmit={ signUp }
-          >
+        <form name='signup'>
           <label>
             <input
-              placeholder='Name'
               name='username'
+              placeholder='Name'
               type='text'
             />
           </label>
           <label>
             <input
-              placeholder='Email'
               name='email'
+              placeholder='Email'
               type='email'
             />
           </label>
           <label>
             <input
-              placeholder='Password'
               name='password'
+              placeholder='Password'
               type='password'
             />
           </label>
@@ -54,8 +50,3 @@ export class SignUp extends React.Component {
 
 SignUp.displayName = 'SignUp';
 SignUp.propTypes = propTypes;
-
-export default connect(
-  null,
-  actions
-)(SignUp);

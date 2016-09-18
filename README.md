@@ -3,19 +3,175 @@
 ## User Stories
 
 #### As a user, I can...
+Auth (/sign-up /login pages)
+
 * sign up
 * log in
+
+Products (default page)
+
 * view all the products on one page
-* search the products
-* favorite specific products
-* add products to my cart
+* when I search the products page filters the list
+* favorite specific products and persist to the database
+* add products to my cart and persist that to the database
+
+Cart (/cart)
 * view my cart
 * increase the item quantity of a specific product from my cart
 * see price changes reactively with quantity changes in my cart
 * remove an item from my cart
 
+Auth Bonus
+
+* if I have previously signed in on page refresh I am still logged in
+* Sign out (with corresponding UI elements)
+
+## Backend API
+
+Our API is built using [Loopback.js](https://github.com/strongloop/loopback)
+To see all of the available REST API endpoints take a look at the explorer [localhost:3000/explorer](localhost:3000/explorer)
+
+Below are the main API endpoints you will use for this app
+
+### Auth
+
+Create a new user (will also provide an access token)
+POST /api/users
+BODY
+```
+{
+  username: String,
+  email: String,
+  password: String
+}
+```
+
+returns the user object on success (see: [server/models/user.json](server/models/user.json) for the schema) with attached access token
+
+RETURNS
+```
+{
+  id: String,
+  email: String,
+  username: String,
+  cart: [],
+  favs: [],
+  accessToken: String
+}
+```
+
+sign in
+
+POST /api/users/login?include=user
+BODY {
+  email,
+  password
+}
+
+RETURNS
+```js
+{
+  user: User,
+  id: String, // accessToken
+}
+```
+
+### Products
+
+see [server/models/products.json](server/models/products.json) for Product schema
+
+Get the list of products available
+
+GET /api/products
+RETURNS
+
+```js
+[Product, Product, ...Product]
+
+```
+
+### Cart
+
+Access users cart through the users API
+
+**Add an item to the users cart**
+GET /api/users/:userId/add-to-cart?access_token=${accessToken}
+BODY
+```js
+{
+  itemId: String // the id of the product to add to the cart
+}
+```
+
+RETURNS
+```js
+{
+  cart: [ ...{ id: String, count: Number } ]
+}
+```
+
+returns the updated cart. Use this information to ensure your clients cart is up
+to date with your server
+
+
+**Remove an item from the users cart**
+GET /api/users/:userId/remove-from-cart?access_token=${accessToken}
+BODY
+```js
+{
+  itemId: String // the id of the product
+}
+```
+
+RETURNS
+```
+{
+  cart: [ ...{ id: String, count: Number } ]
+}
+```
+
+returns the updated cart. Use this information to ensure your clients cart is up
+to date with your server
+
+**delete an item from the users cart**
+GET /api/users/:userId/delete-form-cart?access_token=${accessToken}
+
+BODY
+```js
+{
+  itemId: String // the id of the product
+}
+```
+
+RETURNS
+{
+  cart: [ ...{ id: String, count: Number } ]
+}
+
+returns the updated cart. Use this information to ensure your clients cart is up
+to date with your server
+
+### Favorite
+Access users favs through the users API
+
+GET /api/users/:userId/fav?access_token=${accessToken}
+BODY
+```js
+{
+  itemId: String // the id of the product
+}
+```
+RETURNS
+
+```
+{
+  fav: [ itemId, itemId, ...itemId ]
+}
+```
+Use this return to update clients favs.
 
 ## To start development
+
 To seed the database for the first time
 
 ```

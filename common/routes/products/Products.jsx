@@ -1,40 +1,14 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import includes from 'lodash/includes';
 
 import Product from './Product.jsx';
-import {
-  fetchProducts,
-  addItemToCart,
-  fav,
-  favsSelector,
-  productsSelector,
-  cartSelector
-} from '../../redux';
 
-const mapStateToProps = state => {
-  const { products } = productsSelector(state);
-  const { favs } = favsSelector(state);
-  const { cart } = cartSelector(state);
-  return {
-    products: products.map(item => {
-      let newItem = { ...item };
-      if (includes(favs, item.id)) {
-        newItem.isFav = true;
-      }
-      if (includes(cart.map(({ id }) => id), item.id)) {
-        newItem.isInCart = true;
-      }
-      return newItem;
-    })
-  };
-};
-
-const actions = {
+/*
+const mapdispatchToProps = {
   fetchProducts,
   addItemToCart,
   fav
 };
+*/
 
 const propTypes = {
   products: PropTypes.array,
@@ -43,9 +17,9 @@ const propTypes = {
   fav: PropTypes.func.isRequired
 };
 
-export class Products extends Component {
+export default class Products extends Component {
   componentDidMount() {
-    this.props.fetchProducts();
+    // this.props.fetchProducts();
   }
   renderProducts(products, addItemToCart, fav) {
     if (!Array.isArray(products)) {
@@ -82,8 +56,3 @@ export class Products extends Component {
 
 Products.displayName = 'Products';
 Products.propTypes = propTypes;
-
-export default connect(
-  mapStateToProps,
-  actions
-)(Products);

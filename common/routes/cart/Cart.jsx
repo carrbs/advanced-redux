@@ -1,16 +1,6 @@
 import React, { PropTypes, Component } from 'react';
-import { connect } from 'react-redux';
 
 import EmptyCart from './Empty-Cart.jsx';
-import {
-  fetchProducts,
-  addItemToCart,
-  removeItemFromCart,
-  deleteItemFromCart,
-  userSelector,
-  cartSelector,
-  productsSelector
-} from '../../redux';
 
 const propTypes = {
   user: PropTypes.object,
@@ -23,49 +13,17 @@ const propTypes = {
   deleteItemFromCart: PropTypes.func.isRequired
 };
 
-const actions = {
+
+/*
+const mapDispatchToProps = {
   fetchProducts,
   addItemToCart,
   removeItemFromCart,
   deleteItemFromCart
 };
+*/
 
-const mapStateToProps = state => {
-  const { products } = productsSelector(state);
-  const productsById = products
-    .reduce((productMap, product) => {
-      productMap[product.id] = product;
-      return productMap;
-    }, {});
-
-  const { cart } = cartSelector(state);
-  const filledCart = cart
-    .map(({ id, count })=> {
-      const product = productsById[id];
-      if (!product) {
-        return false;
-      }
-      return {
-        ...product,
-        count
-      };
-    })
-    .filter(Boolean);
-
-  return {
-    ...userSelector(state),
-    cart: filledCart,
-    cartEmpty: filledCart.length === 0,
-    total: filledCart
-      .reduce(
-        (total, { count, price }) => total + count * price,
-        0
-      )
-      .toFixed(2)
-  };
-};
-
-export class Cart extends Component {
+export default class Cart extends Component {
   componentDidMount() {
     this.props.fetchProducts();
   }
@@ -132,6 +90,7 @@ export class Cart extends Component {
       </div>
     ));
   }
+
   render() {
     const {
       cart,
@@ -188,10 +147,4 @@ export class Cart extends Component {
   }
 }
 
-
 Cart.propTypes = propTypes;
-
-export default connect(
-  mapStateToProps,
-  actions
-)(Cart);
