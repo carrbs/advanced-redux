@@ -78,7 +78,7 @@ RETURNS
 
 ### Products
 
-see [server/models/products.json](server/models/products.json) for Product schema
+see [server/models/product.json](server/models/product.json) for Product schema
 
 Get the list of products available
 
